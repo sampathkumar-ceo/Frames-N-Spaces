@@ -1,53 +1,45 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
-    const { name, email, message, company } = await req.json();
-
     try {
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
+        const { name, email, message, company } = await req.json();
 
-        // ✅ 1. ALWAYS send email to YOU (critical)
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER,
+        const response = await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: "info@framesnspaces.com",
             subject: `New Contact - ${name}`,
             text: `
 New lead received:
 
 Name: ${name}
 Email: ${email}
-Company: ${company}
-Message: ${message}
+Company: ${company || "N/A"}
+
+Message:
+${message}
       `,
         });
 
-        // ✅ 2. Try sending auto-reply (non-critical)
-        try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
-                to: email,
-                subject: "We received your message",
-                text: `Hi ${name},
+        console.log("Email sent:", response);
 
-Thanks for reaching out to Frames n Spaces.
-Our team will get back to you shortly.
-
-— Team Frames n Spaces`,
-            });
-        } catch (err) {
-            console.warn("Auto-reply failed (invalid email likely):", err);
-        }
-
-        return Response.json({ success: true });
+        return Response.json({
+            success: true,
+        });
 
     } catch (error) {
-        console.error("Main email failed:", error);
-        return Response.json({ success: false }, { status: 500 });
+        console.error(
+            "Resend email error:",
+            JSON.stringify(error, null, 2)
+        );
+
+        return Response.json(
+            {
+                success: false,
+                error,
+            },
+            { status: 500 }
+        );
     }
 }
