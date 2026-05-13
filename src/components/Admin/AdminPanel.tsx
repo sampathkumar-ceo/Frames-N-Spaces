@@ -142,6 +142,10 @@ export default function AdminPanel() {
       const res = await saveSiteData(localData as SiteData);
       if (res.success) {
         setData(localData);
+        // If the passcode was changed, update our stored passcode for future requests
+        if (localData.adminPasscode) {
+          setPasscode(localData.adminPasscode);
+        }
         setLastSaved(new Date().toLocaleTimeString());
         setPassMsg("Changes saved to database at " + new Date().toLocaleTimeString());
         setTimeout(() => setPassMsg(""), 5000);
@@ -194,10 +198,12 @@ export default function AdminPanel() {
       setPassMsg("Passcode must be at least 6 characters.");
       return;
     }
-    setPasscode(newPasscode);
-    setPassMsg("Passcode updated successfully!");
+    if (!localData) return;
+    
+    setLocalData({ ...localData, adminPasscode: newPasscode });
+    setPassMsg("Passcode updated locally! Click 'Save All Changes' to apply permanently.");
     setNewPasscode("");
-    setTimeout(() => setPassMsg(""), 3000);
+    setTimeout(() => setPassMsg(""), 5000);
   };
 
   const handleReset = async (section: keyof SiteData) => {

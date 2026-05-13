@@ -80,6 +80,7 @@ export interface SiteData {
   whatWeDo: WhatWeDoItem[];
   threatsToStrengths: ThreatToStrengthItem[];
   clientele: { name: string; logo: string }[];
+  adminPasscode?: string;
 }
 
 export interface ThreatToStrengthItem {
@@ -370,6 +371,7 @@ export async function getSiteData(): Promise<SiteData> {
     whatWeDo: defaultWhatWeDo,
     threatsToStrengths: defaultThreatsToStrengths,
     clientele: defaultClientele,
+    adminPasscode: undefined,
   };
 
   try {
@@ -393,6 +395,7 @@ export async function getSiteData(): Promise<SiteData> {
         whatWeDo: parsed.whatWeDo || defaultWhatWeDo,
         threatsToStrengths: parsed.threatsToStrengths || defaultThreatsToStrengths,
         clientele: parsed.clientele || defaultClientele,
+        adminPasscode: parsed.adminPasscode || undefined,
       };
     }
   } catch (err) {
@@ -420,7 +423,7 @@ export async function saveSiteData(data: SiteData): Promise<{ success: boolean; 
 
 export function getPasscode(): string {
   if (typeof window === "undefined") return "admin@12345";
-  return localStorage.getItem(PASSCODE_KEY) || "admin@12345";
+  return localStorage.getItem(PASSCODE_KEY) || "";
 }
 
 export function setPasscode(newPasscode: string): void {

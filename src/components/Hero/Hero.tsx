@@ -111,7 +111,7 @@ export default function Hero() {
       <div className={styles.content}>
         <div className={styles.labelWrap} ref={labelRef}>
           <div className={styles.labelLine} />
-          <span className={styles.label}>Project Management Advisory</span>
+          <span className={styles.label}>Precision in Every Corner</span>
           <div className={styles.labelLine} />
         </div>
 

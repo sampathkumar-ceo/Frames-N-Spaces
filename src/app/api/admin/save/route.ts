@@ -14,8 +14,24 @@ export async function POST(request: Request) {
   try {
     const { passcode, data } = await request.json();
 
-    const correctPasscode =
-      process.env.ADMIN_PASSCODE || 'admin@12345';
+    // 1. Check database for a stored passcode
+    let dbPasscode = null;
+    try {
+      const { data: settingsData } = await supabaseAdmin
+        .from('site_settings')
+        .select('data')
+        .order('id', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (settingsData?.data?.adminPasscode) {
+        dbPasscode = settingsData.data.adminPasscode;
+      }
+    } catch (err) {
+      console.error('Error fetching passcode from DB in save route:', err);
+    }
+
+    const correctPasscode = dbPasscode || process.env.ADMIN_PASSCODE || 'admin@12345';
 
     if (passcode !== correctPasscode) {
       return NextResponse.json(
