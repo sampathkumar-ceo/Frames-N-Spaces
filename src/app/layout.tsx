@@ -15,7 +15,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
   },
   icons: {
-    icon: "/F&S_Final Logo.svg",
+    icon: [{ url: "/F&S_Final Logo.svg", type: "image/svg+xml" }],
+    shortcut: [{ url: "/F&S_Final Logo.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/F&S_Final Logo.svg", type: "image/svg+xml" }],
   },
 };
 
