@@ -253,7 +253,7 @@ export default function Contact() {
               <div>
                 <h4 className={styles.infoTitle}>Call Us</h4>
                 <a href="tel:+918919296590" className={styles.infoLink}>
-                  +91-89192 96590
+                  +91-70003 36196
                 </a>
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function Contact() {
                 <p className={styles.infoText}>
                   Monday — Friday
                   <br />
-                  9:00 AM — 6:00 PM IST
+                  9:30 AM — 6:30 PM IST
                 </p>
               </div>
             </div>
